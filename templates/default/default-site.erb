@@ -1,0 +1,83 @@
+<% if @config.ssl_enable && @config.force_ssl_redirect == true %>
+server {
+  listen 80;
+  server_name <%= @servername %>
+  return  301 https://<%= @servername %>$request_uri;
+}
+<% end %>
+server {
+<% if @port %>
+  listen <%= @port %>;
+<% end %>
+<% if @servername %>
+  server_name  <%= @servername %>;
+<% end %>
+<% if @access_log %>
+  access_log  <%= @access_log %>;
+<% end %>
+<% if @error_log %>
+  error_log   <%= @error_log %>;
+<% end %>
+<% if @root_location %>
+  root <%= @root_location %>;
+<% end %>
+
+<% if @config.location %>
+  location <%= @config.location %> {
+    try_files $uri $uri/ =404;
+  }
+<% end %>
+
+<% if @config.additional_options %>
+  <% @config.additional_options.each do |k,v| %>
+  <%= "#{k} #{v}" %>;
+  <% end %>
+<% end %>
+}
+<% if @ssl_enable == true %>
+server {
+<% if @config.ssl_port %>
+  port <%= @config.ssl_port %>
+<% end %>
+<% if @servername %>
+  server_name <%= @severname %>
+<% end %>
+<% if @root_location %>
+  root <%= @root_location %>
+<% end %> 
+  # Default SSL options
+  ssl on;
+<% if @config.ssl_cert %>
+  ssl_certificate <%= @config.ssl_cert %>;
+<% end %>
+<% if @config.ssl_key %>
+  ssl_key <%= @config.ssl_key %>;
+<% end %>
+
+<% if @config.ssl_session_timeout %>
+  session_timeout <%= @config.ssl_session_timeout %>;
+<% end %>
+<% if @config.ssl_protocols %>
+  ssl_protocols <%= @config.ssl_protocols %>;
+<% end %>
+<% if @config.ssl_ciphers %>
+  ssl_ciphers <%= "#{@config.ssl_ciphers}" %>;
+<% end %>
+<% if @config.ssl_prefer_server_ciphers %>
+  ssl_prefer_server_ciphers <%= @config.ssl_prefer_server_ciphers %>
+<% end %>
+
+<% if @config.location %>
+  location <%= @config.location %> {
+    try_files $uri $uri/ =404;
+  }
+<% end %>
+<% if @config.additional_ssl_options %>
+  <% @config.additional_ssl_options.each do |k,v| %>
+  <%= "#{k} #{v}" %>;
+<% end %>
+<% end %>
+
+}
+<% end %>
+
