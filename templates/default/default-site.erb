@@ -1,4 +1,4 @@
-<% if @config.ssl_enable && @config.force_ssl_redirect == true %>
+<% if @config.ssl_enable && @config.ssl_force_redirect == true %>
 server {
   listen 80;
   server_name <%= @servername %>
@@ -34,7 +34,7 @@ server {
   <% end %>
 <% end %>
 }
-<% if @ssl_enable == true %>
+<% if @config.ssl_enable == true %>
 server {
 <% if @config.ssl_port %>
   port <%= @config.ssl_port %>
@@ -72,8 +72,8 @@ server {
     try_files $uri $uri/ =404;
   }
 <% end %>
-<% if @config.additional_ssl_options %>
-  <% @config.additional_ssl_options.each do |k,v| %>
+<% if @config.ssl_additional_options %>
+  <% @config.ssl_additional_options.each do |k,v| %>
   <%= "#{k} #{v}" %>;
 <% end %>
 <% end %>

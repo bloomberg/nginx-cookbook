@@ -5,5 +5,5 @@ end
 nginx_site "www-ssl" do
   servername "www.example.com"
   ssl_enable true
-  action [:create, :enable]
+  ssl_force_redirect true
 end

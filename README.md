@@ -71,10 +71,10 @@ You can also enable SSL and/or force redirect for anything listening on 80:
 nginx_site "www" do
   servername "www.company.com"
   enable_ssl true
-  force_ssl_redirect true
+  ssl_force_redirect true
 end
 ```
- If you would like to add additional SSL options only that won't be apart of the main http service you can use ```additional_ssl_options``` block.
+ If you would like to add additional SSL options only that won't be apart of the main http service you can use ```ssl_additional_options``` block.
 
 Last but not least you can also bring your own config file and do whatever you like with that.
 ```ruby

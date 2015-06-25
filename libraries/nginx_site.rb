@@ -31,7 +31,7 @@ class Chef::Resource::NginxSite < Chef::Resource
   # @!attribute enable_ssl
   # @return [TrueClass ,FalseClass]
   attribute(:ssl_enable, kind_of: [TrueClass, FalseClass], default: false)
-  attribute(:force_ssl_redirect, kind_of: [TrueClass, FalseClass], default: false)
+  attribute(:ssl_force_redirect, kind_of: [TrueClass, FalseClass], default: false)
   attribute(:ssl_port, kind_of: Integer, default: '443')
   attribute(:ssl_cert, kind_of: [String, NilClass], default: nil)
   attribute(:ssl_key, kind_of: [String, NilClass], default: nil)
@@ -39,7 +39,7 @@ class Chef::Resource::NginxSite < Chef::Resource
   attribute(:ssl_protocols, kind_of: String, default: "SSLv3 TLSv1 TLSv1.1 TLSv1.2")
   attribute(:ssl_ciphers, kind_of: String, default: "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES")
   attribute(:ssl_prefer_server_ciphers, equal_to: %w{yes no}, default: 'yes')
-  attribute(:additional_ssl_options, option_collector: true)
+  attribute(:ssl_additional_options, option_collector: true)
 
   # @!attribute variables
   # @return [String]
