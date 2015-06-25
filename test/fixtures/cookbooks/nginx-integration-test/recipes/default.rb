@@ -1,5 +1,5 @@
 nginx_service "www" do
-  extra_options do
+  additional_options do
     jason 'blank'
   end
 end
