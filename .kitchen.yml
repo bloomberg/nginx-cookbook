@@ -13,5 +13,8 @@ platforms:
 suites:
 - name: default
   run_list:
-    - recipe[redis-instance-test::default]
+    - recipe[nginx-integration-test::default]
   attributes:
+- name: ssltest
+  run_list:
+    - recipe[nginx-ssl-test::default]
