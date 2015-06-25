@@ -5,7 +5,7 @@
 require 'poise'
 require_relative 'helpers'
 
-class Chef::Resource::NginxSite < Chef::Resource
+class Chef::Resource::NginxModule < Chef::Resource
   include Poise(fused: true)
   provides(:nginx_module)
   include NginxCookbook::Helpers
@@ -18,11 +18,11 @@ class Chef::Resource::NginxSite < Chef::Resource
 
   # @!attribute source
   # @return [String]
-  attribute(:source, kind_of: String, default: 'default-site.erb')
+  attribute(:source, kind_of: String, default: 'module.conf.erb')
 
   # @!attribute config_options
   # @return [Hash]
-  attribute(:module_config, kind_of: Hash, default: {})
+  attribute(:module_config, options_collector: true)
 
   # @!attribute cookbook
   # @return [String]
@@ -34,9 +34,6 @@ class Chef::Resource::NginxSite < Chef::Resource
       template "#{new_resource.module_name} :create /etc/nginx/modules/#{new_resource.module_name}" do
         path "/etc/nginx/modules/#{new_resource.module_name}"
         source new_resource.source
-        variables(
-          module_config: new_resource.module_config,
-        )
         owner "root"
         group "root"
         mode "0644"

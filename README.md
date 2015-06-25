@@ -16,7 +16,7 @@ Currently this does not support sentinal but it will in due time.
 | [poise-service][3] | [Library cookbook][4] built to abstract service management. |
 
 ### Attributes
-All nginx default shipped settings are built directly into the resource and most if not all have default settings attached(same that come packaged with nginx). You can view all default settings/attributes here [Nginx Service][5] [Nginx Site][6]. 
+All nginx default shipped settings are built directly into the resource and most if not all have default settings attached(same that come packaged with nginx). You can view all default settings/attributes here [Nginx Service][5] [Nginx Site][6] [Nginx Module][7]. 
 
 ### Resources/Providers
 
@@ -83,6 +83,19 @@ nginx_site "www" do
 end
 ```
 
+####nginx_module
+This provider will give you the ability to setup the config for a module. If the module needs to be pulled down from the internet or installed somehow you will need to add that code. The default erb template is simple and just accepts a hash. You will likely want to pass it a source other than my empty one. However you can view the options in the library file. [Nginx Module][7].
+```ruby
+nginx_modile "new-module" do 
+  module_config do
+    option1 'value1'
+    option2 'value2'
+  end
+end
+```
+
+
+
 License & Authors
 -----------------
 - Author:: Anthony Caiafa (<acaiafa1@bloomberg.net>)
@@ -110,3 +123,4 @@ limitations under the License.
 [4]: http://blog.vialstudios.com/the-environment-cookbook-pattern#thelibrarycookbook
 [5]: libraries/nginx_service.rb
 [6]: libraries/nginx_site.rb
+[7]: libraries/nginx_modile.rb
