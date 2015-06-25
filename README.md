@@ -44,6 +44,7 @@ You also have the ability your own nginx.conf entirely by specifying the source 
 nginx_service "www" do
   source "somefile.erb"
 end
+```
 
 ####nginx_site
 This provider will create and enable(symbolic link to sites-enabled) by default for all nginx sites specified in the block. Ideally you will always pass a servername otherwise the default is example.com:
