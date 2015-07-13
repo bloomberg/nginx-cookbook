@@ -1,0 +1,20 @@
+---
+driver_plugin: vagrant
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+  - name: ubuntu-12.04
+  - name: centos-7.1
+  - name: centos-6.6
+  - name: centos-5.11
+
+suites:
+- name: default
+  run_list:
+    - recipe[nginx-integration-test::default]
+  attributes:
+- name: ssltest
+  run_list:
+    - recipe[nginx-ssl-test::default]

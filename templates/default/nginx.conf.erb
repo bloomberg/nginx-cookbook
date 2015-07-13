@@ -1,0 +1,102 @@
+<% if @user %>
+user <%= @user %>;
+<% end %>
+<% if @config.worker_processes %>
+worker_processes <%= @config.worker_processes %>;
+<% end %>
+<% if @config.pid_file %>
+pid <%= @config.pid_file %>;
+<% end %>
+
+events {
+<% if @config.worker_connections %>
+  worker_connections <%= @config.worker_connections %> ;
+<% end %>
+}
+
+http {
+  ##
+  # Basic Settings
+  ##
+<% if @config.sendfile %>
+  sendfile <%= @config.sendfile %>;
+<% end %>
+<% if @config.tcp_nopush %>
+  tcp_nopush <%= @config.tcp_nopush %>;
+<% end %>
+<% if @config.tcp_nodelay %>
+  tcp_nodelay <%= @config.tcp_nodelay %>;
+<% end %>
+<% if @config.keepalive_timeout %>
+  keepalive_timeout <%= @config.keepalive_timeout %>;
+<% end %>
+<% if @config.types_hash_max_size %>
+  types_hash_max_size <%= @config.types_hash_max_size %>;
+<% end %>
+<% if @config.server_tokens %>
+  server_tokens <%= @config.server_tokens %>;
+<% end %>
+<% if @config.server_names_hash_bucket_size %>
+  server_names_hash_bucket_size <%= @config.server_names_hash_bucket_size %>;
+<% end %>
+<% if @config.server_name_in_redirect %>
+  server_name_in_redirect <%= @config.server_name_in_redirect %>;
+<% end %>
+  include /etc/nginx/mime.types;
+  default_type application/octet-stream;
+
+  ##
+  # Logging Settings
+  ##
+<% if @config.access_log %>
+  access_log <%= @config.access_log %>;
+<% end %>
+<% if @config.error_log %>
+  error_log <%= @config.error_log %>;
+<% end %>
+
+  ##
+  # Gzip Settings
+  ##
+<% if @config.gzip %>
+  gzip <%= @config.gzip %>;
+<% end %>
+<% if @config.gzip_disable %>
+  gzip_disable <%= @config.gzip_disable %>;
+<% end %>
+<% if @config.gzip_vary %>
+  gzip_vary <%= @config.gzip_vary %>
+<% end %>
+<% if @config.gzip_proxied %>
+  gzip_proxied <%= @config.gzip_proxied %>
+<% end %>
+<% if @config.gzip_vary %>
+  gzip_vary <%= @config.giz_vary %>;
+<% end %>
+<% if @config.gzip_proxied %>
+   gzip_proxied <%= @config.gzip_proxied %>;
+<% end %>
+<% if @config.gzip_comp_level %>
+  gzip_comp_level <%= @config.gzip_comp_level %>;
+<% end %>
+<% if @config.gzip_buffers %>
+  gzip_buffers <%= @config.gzip_buffers %>;
+<% end %>
+<% if @config.gzip_http_version %>
+  gzip_http_version <%= @config.gzip_http_version %>;
+<% end %>
+<% if @config.gzip_types %>
+  gzip_types <%= @config.gzip_types %>;
+<% end %>
+
+# Additional options
+<% if @additional_options %>
+<% @additional_options.each do |k,v| %>
+  <%= "#{k} #{v}" %>;
+<% end %>
+<% end %>
+
+  include /etc/nginx/conf.d/*.conf;
+  include /etc/nginx/sites-enabled/*;
+  include /etc/nginx/modules/*;
+}
