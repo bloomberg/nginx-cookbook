@@ -63,6 +63,11 @@ class Chef::Resource::NginxSite < Chef::Resource
         action :delete
       end
 
+      directory new_resource.root_location do
+        recursive true
+        action :create
+      end
+
       template "#{new_resource.instance} :create /etc/nginx/sites-available/#{new_resource.instance}" do
         path "/etc/nginx/sites-available/#{new_resource.instance}"
         source new_resource.source
