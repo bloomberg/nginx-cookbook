@@ -29,7 +29,7 @@ class Chef::Resource::NginxService < Chef::Resource
   # @see: default nginx.conf configuration file
   attribute(:source, kind_of: String, default: "nginx.conf.erb")
   attribute(:worker_processes, kind_of: Integer, default: 4)
-  attribute(:pid_file, kind_of: String, default: '/var/run/nginx.pid')
+  attribute(:pid_file, kind_of: String, default: '/run/nginx/nginx.pid')
   attribute(:worker_connections, kind_of: Integer, default: '1024')
   attribute(:sendfile, equal_to: %w{on off}, default: 'on')
   attribute(:tcp_nopush, equal_to: %w{on off}, default: 'on')
@@ -80,6 +80,14 @@ class Chef::Provider::NginxService < Chef::Provider
         action :create
       end
 
+      # Create pid dir
+      directory "/run/nginx" do
+        owner "www-data"
+        group "root"
+        mode "0755"
+        action :create
+      end
+
       # Create primary nginx directory
       directory "#{new_resource.instance} :create /etc/nginx" do
         path "/etc/nginx"
@@ -115,12 +123,14 @@ class Chef::Provider::NginxService < Chef::Provider
     end
     super
   end
-
   def service_options(service)
     service.service_name('nginx')
     service.command('/usr/sbin/nginx')
-    service.directory('/run')
+    service.directory('/run/nginx')
+    service.environment({'PID' => '/run/nginx/nginx.pid'})
     service.user(platform_user)
     service.restart_on_update(true)
+    service.options :systemd, template: "nginx:systemd.erb"
+    service.options :upstart, template: "nginx:upstart.erb"
   end
 end

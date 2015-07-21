@@ -21,6 +21,10 @@ class Chef::Resource::NginxSite < Chef::Resource
   # @return [String]
   attribute(:source, kind_of: String, default: 'default-site.erb')
 
+  # @!attribute cookbook
+  # @return [String]
+  attribute(:cookbook, kind_of: String, default: 'nginx')
+
   # @initial settings for functioning site
   attribute(:servername, kind_of: [String, NilClass], default: nil)
   attribute(:port, kind_of: Integer, default: '80')
@@ -82,7 +86,7 @@ class Chef::Resource::NginxSite < Chef::Resource
           owner "root"
           group "root"
           mode "0644"
-          cookbook "nginx"
+          cookbook new_resource.cookbook
       end
 
       link "#{new_resource.instance} :enable /etc/nginx/sites-enabled/#{new_resource.instance}" do
