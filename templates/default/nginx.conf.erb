@@ -42,17 +42,17 @@ http {
 <% if @config.server_name_in_redirect %>
   server_name_in_redirect <%= @config.server_name_in_redirect %>;
 <% end %>
-  include /etc/nginx/mime.types;
+  include <%= @config.config_dir%>/mime.types;
   default_type application/octet-stream;
 
   ##
   # Logging Settings
   ##
 <% if @config.access_log %>
-  access_log <%= @config.access_log %>;
+  access_log <%= "#{@config.log_path}/#{@config.access_log}" %>;
 <% end %>
 <% if @config.error_log %>
-  error_log <%= @config.error_log %>;
+  error_log <%= "#{@config.log_path}/#{@config.error_log}" %>;
 <% end %>
 
   ##
@@ -96,7 +96,7 @@ http {
 <% end %>
 <% end %>
 
-  include /etc/nginx/conf.d/*.conf;
-  include /etc/nginx/sites-enabled/*;
-  include /etc/nginx/modules/*;
+  include <%= @config.config_dir %>/conf.d/*.conf;
+  include <%= @config.config_dir %>/sites-enabled/*;
+  include <%= @config.config_dir %>/modules/*;
 }

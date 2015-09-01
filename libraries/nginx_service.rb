@@ -18,6 +18,10 @@ class Chef::Resource::NginxService < Chef::Resource
   # @return [String]
   attribute(:instance, kind_of: [String, NilClass], default: nil)
 
+  # @!attribute cookbook
+  # @return [String]
+  attribute(:cookbook, kind_of: [String], default: 'nginx')
+
   # @!attribute package
   # @return [String]
   attribute(:pkg, kind_of: String, default: 'nginx')
@@ -26,8 +30,12 @@ class Chef::Resource::NginxService < Chef::Resource
   # @return [String, NilClass]
   attribute(:version, kind_of: [String, NilClass], default: nil)
 
+  # !@attribute config_dir
+  # @return [String]
+  attribute(:config_dir, kind_of: String, default: '/etc/nginx')
+
   # @see: default nginx.conf configuration file
-  attribute(:source, kind_of: String, default: "nginx.conf.erb")
+  attribute(:source, kind_of: String, default: 'nginx.conf.erb')
   attribute(:worker_processes, kind_of: Integer, default: 4)
   attribute(:pid_file, kind_of: String, default: '/run/nginx/nginx.pid')
   attribute(:worker_connections, kind_of: Integer, default: '1024')
@@ -39,8 +47,9 @@ class Chef::Resource::NginxService < Chef::Resource
   attribute(:server_tokens, equal_to: %w{on off}, default: nil)
   attribute(:server_names_hash_bucket_size, kind_of: [Integer, NilClass], default: nil)
   attribute(:server_name_in_redirect, equal_to: %w{on off}, default: nil)
-  attribute(:access_log, kind_of: String, default: '/var/log/nginx/access.log')
-  attribute(:error_log, kind_of: String, default: '/var/log/nginx/error.log')
+  attribute(:log_path, kind_of: String, default: '/var/log/nginx')
+  attribute(:access_log, kind_of: String, default: 'access.log')
+  attribute(:error_log, kind_of: String, default: 'error.log')
   attribute(:gzip, equal_to: %w{on off}, default: 'on')
   attribute(:gzip_disable, kind_of: String, default: 'msie6')
   attribute(:gzip_vary, equal_to: %w{on off}, default: nil)
@@ -72,48 +81,49 @@ class Chef::Provider::NginxService < Chef::Provider
       end
 
       # Create supporting directories
-      directory "#{new_resource.instance} :create /var/log/nginx" do
-        path "/var/log/nginx"
-        owner "www-data"
-        group "adm"
-        mode "0755"
+      directory "#{new_resource.instance} :create #{new_resource.log_path}" do
+        path new_resource.log_path
+        recursive true
+        owner platform_user
+        group platform_user
+        mode 0755
         action :create
       end
 
       # Create pid dir
-      directory "/run/nginx" do
-        owner "www-data"
-        group "root"
-        mode "0755"
+      directory '/run/nginx' do
+        owner platform_user
+        group platform_user
+        mode 0755
         action :create
       end
 
       # Create primary nginx directory
-      directory "#{new_resource.instance} :create /etc/nginx" do
-        path "/etc/nginx"
-        owner "root"
-        group "root"
-        mode "0755"
+      directory "#{new_resource.instance} :create #{new_resource.config_dir}" do
+        path new_resource.config_dir
+        owner 'root'
+        group 'root'
+        mode 0755
         action :create
       end
 
       # Create additional directories
       %w(conf.d sites-available sites-enabled modules).each do |dir|
-        directory "#{new_resource.instance} :create /etc/nginx/#{dir}" do
-          path "/etc/nginx/#{dir}"
-          owner "root"
-          group "root"
-          mode "0755"
+        directory "#{new_resource.instance} :create #{new_resource.config_dir}/#{dir}" do
+          path "#{new_resource.config_dir}/#{dir}"
+          owner 'root'
+          group 'root'
+          mode 0755
           action :create
         end
       end
 
-      template "#{new_resource.instance} :create /etc/nginx/nginx.conf" do 
-        path "/etc/nginx/nginx.conf"
-        source "nginx.conf.erb"
-        owner "root"
-        group "root"
-        cookbook "nginx"
+      template "#{new_resource.instance} :create #{new_resource.config_dir}/nginx.conf" do
+        path "#{new_resource.config_dir}/nginx.conf"
+        source new_resource.source
+        owner 'root'
+        group 'root'
+        cookbook new_resource.cookbook
         variables(
           config: new_resource,
           user: platform_user
@@ -123,14 +133,15 @@ class Chef::Provider::NginxService < Chef::Provider
     end
     super
   end
+
   def service_options(service)
     service.service_name('nginx')
     service.command('/usr/sbin/nginx')
     service.directory('/run/nginx')
-    service.environment({'PID' => '/run/nginx/nginx.pid'})
+    service.environment('PID' => '/run/nginx/nginx.pid')
     service.user(platform_user)
     service.restart_on_update(true)
-    service.options :systemd, template: "nginx:systemd.erb"
-    service.options :upstart, template: "nginx:upstart.erb"
+    service.options :systemd, template: 'nginx:systemd.erb'
+    service.options :upstart, template: 'nginx:upstart.erb'
   end
 end

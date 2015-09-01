@@ -28,15 +28,23 @@ class Chef::Resource::NginxModule < Chef::Resource
   # @return [String]
   attribute(:cookbook, kind_of: String, default: 'nginx')
 
+  # !@attribute user
+  # @return [String]
+  attribute(:user, kind_of: String, default: 'root')
+
+  # !@attribute group
+  # @return [String]
+  attribute(:group, kind_of: String, default: 'root')
+
   # Setup site config files for nginx
   action(:create) do
     notifying_block do
       template "#{new_resource.module_name} :create /etc/nginx/modules/#{new_resource.module_name}" do
         path "/etc/nginx/modules/#{new_resource.module_name}"
         source new_resource.source
-        owner "root"
-        group "root"
-        mode "0644"
+        owner new_resource.user
+        group new_resource.group
+        mode 0644
         cookbook new_resource.cookbook
       end
     end

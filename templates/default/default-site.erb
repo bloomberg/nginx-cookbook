@@ -61,7 +61,7 @@ server {
   ssl_protocols <%= @config.ssl_protocols %>;
 <% end %>
 <% if @config.ssl_ciphers %>
-  ssl_ciphers <%= "#{@config.ssl_ciphers}" %>;
+  ssl_ciphers <%= @config.ssl_ciphers %>;
 <% end %>
 <% if @config.ssl_prefer_server_ciphers %>
   ssl_prefer_server_ciphers <%= @config.ssl_prefer_server_ciphers %>
