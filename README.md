@@ -86,7 +86,7 @@ end
 ####nginx_module
 This provider will give you the ability to setup the config for a module. If the module needs to be pulled down from the internet or installed somehow you will need to add that code. The default erb template is simple and just accepts a hash. You will likely want to pass it a source other than my empty one. However you can view the options in the library file. [Nginx Module][7].
 ```ruby
-nginx_modile "new-module" do 
+nginx_module "new-module" do 
   module_config do
     option1 'value1'
     option2 'value2'
