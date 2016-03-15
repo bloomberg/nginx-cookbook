@@ -94,6 +94,7 @@ class Chef::Provider::NginxService < Chef::Provider
       directory '/run/nginx' do
         owner platform_user
         group platform_user
+        recursive true
         mode 0755
         action :create
       end
