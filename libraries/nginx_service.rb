@@ -73,7 +73,6 @@ class Chef::Provider::NginxService < Chef::Provider
   # Setup intial service files for nginx
   def action_enable
     notifying_block do
-
       setup_repository
 
       # Install Packages
