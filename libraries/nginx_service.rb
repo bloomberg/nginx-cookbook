@@ -73,6 +73,8 @@ class Chef::Provider::NginxService < Chef::Provider
   # Setup intial service files for nginx
   def action_enable
     notifying_block do
+      setup_repository
+
       # Install Packages
       package new_resource.pkg do
         package_name new_resource.pkg
@@ -94,6 +96,7 @@ class Chef::Provider::NginxService < Chef::Provider
       directory '/run/nginx' do
         owner platform_user
         group platform_user
+        recursive true
         mode 0755
         action :create
       end
