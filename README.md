@@ -46,7 +46,7 @@ nginx_service "www" do
 end
 ```
 
-####nginx_site
+#### nginx_site
 This provider will create and enable(symbolic link to sites-enabled) by default for all nginx sites specified in the block. Ideally you will always pass a servername otherwise the default is example.com:
 ```ruby
 nginx_site "wwww" do
@@ -83,7 +83,7 @@ nginx_site "www" do
 end
 ```
 
-####nginx_module
+#### nginx_module
 This provider will give you the ability to setup the config for a module. If the module needs to be pulled down from the internet or installed somehow you will need to add that code. The default erb template is simple and just accepts a hash. You will likely want to pass it a source other than my empty one. However you can view the options in the library file. [Nginx Module][7].
 ```ruby
 nginx_module "new-module" do 
